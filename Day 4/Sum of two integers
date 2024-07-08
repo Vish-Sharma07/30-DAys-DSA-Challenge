@@ -1,0 +1,30 @@
+Given two integers a and b, return the sum of the two integers without using the operators + and -.
+
+Example 1:
+Input: a = 1, b = 2
+Output: 3
+
+// Source Code
+
+#include <iostream>
+
+class Solution {
+public:
+    int getSum(int a, int b) {
+        unsigned int MAX = 0x7FFFFFFF; //^ gets the sum without carry
+        unsigned int mask = 0xFFFFFFFF; //If a is negative, get its 32-bit two's complement representation
+
+    // XOR (^): This operation adds two numbers without carrying.
+    // AND (&): This operation helps to find the carry bits.
+    // Left shift (<<): This operation shifts the carry bits to the correct position.
+
+        while (b != 0) {
+            unsigned int sum = (a ^ b) & mask;
+            unsigned int carry = ((a & b) << 1) & mask;
+            a = sum;
+            b = carry;
+        }
+
+        return a <= MAX ? a : ~(a ^ mask);
+    }
+};
