@@ -1,0 +1,46 @@
+Given two strings s and t, return true if t is an anagram of s, and false otherwise.
+
+An Anagram is a word or phrase formed by rearranging the letters of a different word or phrase, typically using all the original letters exactly once.
+
+ 
+
+Example 1:
+
+Input: s = "anagram", t = "nagaram"
+Output: true
+Example 2:
+
+Input: s = "rat", t = "car"
+Output: false
+
+// Source Code
+
+class Solution {
+public:
+    bool isAnagram(string s, string t) {
+        if (s.size() != t.size()) {
+            return false;
+        }
+        
+        vector<int> charCount(26, 0);
+        
+        // Count characters in s
+        for (char c : s) {
+            charCount[c - 'a']++;
+        }
+        
+        // Subtract character counts using t
+        for (char c : t) {
+            charCount[c - 'a']--;
+        }
+        
+        // Check if all counts are zero
+        for (int count : charCount) {
+            if (count != 0) {
+                return false;
+            }
+        }
+        
+        return true;
+    }
+};
