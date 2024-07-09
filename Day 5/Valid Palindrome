@@ -1,0 +1,35 @@
+A phrase is a palindrome if, after converting all uppercase letters into lowercase letters and removing all non-alphanumeric characters, it reads the same forward and backward. Alphanumeric characters include letters and numbers.
+
+Given a string s, return true if it is a palindrome, or false otherwise.
+
+ 
+
+Example 1:
+
+Input: s = "A man, a plan, a canal: Panama"
+Output: true
+Explanation: "amanaplanacanalpanama" is a palindrome.
+
+class Solution {
+public:
+    bool isPalindrome(string s) {
+        string filteredString = "";
+        // Filter non alphanumeric and convert to lower case
+        for(char c:s){
+            if(isalnum(c)){
+                filteredString += tolower(c);
+            }
+        }
+
+        // Check if the filtered string is palindrome
+        int left = 0, right = filteredString.size()-1;
+        while(left<right){
+            if(filteredString[left] != filteredString[right]){
+                return false;
+            }
+            left++;
+            right--;
+        }
+        return true;
+    }
+};
