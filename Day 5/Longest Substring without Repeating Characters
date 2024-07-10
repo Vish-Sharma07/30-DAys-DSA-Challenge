@@ -1,0 +1,41 @@
+Given a string s, find the length of the longest 
+substring
+ without repeating characters.
+
+ 
+
+Example 1:
+
+Input: s = "abcabcbb"
+Output: 3
+Explanation: The answer is "abc", with the length of 3.
+Example 2:
+
+Input: s = "bbbbb"
+Output: 1
+Explanation: The answer is "b", with the length of 1.
+
+// Source Code
+
+class Solution {
+public:
+    int lengthOfLongestSubstring(string s) {
+        unordered_map<char, int> charIndexMap;
+        int maxLength = 0;
+        int start = 0;
+        for(int end=0; end<s.length();end++){
+            char currentChar = s[end];
+            // If the character is found in the map and its index is within the current window
+            if (charIndexMap.find(currentChar) != charIndexMap.end() && charIndexMap[currentChar] >= start) {
+                // Move the start right to the next position of the last occurrence of currentChar
+                start = charIndexMap[currentChar] + 1;
+            }
+            // Update the latest index of the character
+            charIndexMap[currentChar] = end;
+
+            // Update the maxLength
+            maxLength = max(maxLength, end - start + 1);
+        }
+        return maxLength;
+    }
+};
