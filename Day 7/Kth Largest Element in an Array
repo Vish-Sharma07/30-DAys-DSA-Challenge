@@ -1,0 +1,56 @@
+Given an integer array nums and an integer k, return the kth largest element in the array.
+
+Note that it is the kth largest element in the sorted order, not the kth distinct element.
+
+Can you solve it without sorting?
+
+ 
+
+Example 1:
+
+Input: nums = [3,2,1,5,6,4], k = 2
+Output: 5
+
+//Source Code
+
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+class Solution {
+public:
+    int findKthLargest(vector<int>& nums, int k) {
+        return quickSelect(nums, 0, nums.size() - 1, nums.size() - k);
+    }
+    
+private:
+    int quickSelect(vector<int>& nums, int left, int right, int k) {
+        if (left == right) {
+            return nums[left];
+        }
+        
+        int pivotIndex = partition(nums, left, right);
+        
+        if (k == pivotIndex) {
+            return nums[k];
+        } else if (k < pivotIndex) {
+            return quickSelect(nums, left, pivotIndex - 1, k);
+        } else {
+            return quickSelect(nums, pivotIndex + 1, right, k);
+        }
+    }
+    
+    int partition(vector<int>& nums, int left, int right) {
+        int pivot = nums[right];
+        int i = left;
+        
+        for (int j = left; j < right; ++j) {
+            if (nums[j] <= pivot) {
+                swap(nums[i], nums[j]);
+                ++i;
+            }
+        }
+        swap(nums[i], nums[right]);
+        return i;
+    }
+};
