@@ -1,0 +1,50 @@
+Given a reference of a node in a connected undirected graph.
+
+Return a deep copy (clone) of the graph.
+
+Each node in the graph contains a value (int) and a list (List[Node]) of its neighbors.
+
+class Node {
+    public int val;
+    public List<Node> neighbors;
+}
+
+
+// SourceCode
+
+class Solution {
+public:
+    Node* cloneGraph(Node* node) {
+        if (!node) return nullptr;
+
+        // Use a hashmap to keep track of all the nodes which have already been created
+        unordered_map<Node*, Node*> visited;
+
+        // Create the root node
+        Node* cloneRoot = new Node(node->val);
+        visited[node] = cloneRoot;
+
+        // Use a queue to perform BFS
+        queue<Node*> q;
+        q.push(node);
+
+        while (!q.empty()) {
+            Node* curr = q.front();
+            q.pop();
+
+            // Iterate through the neighbors
+            for (auto neighbor : curr->neighbors) {
+                if (visited.find(neighbor) == visited.end()) {
+                    // If this neighbor hasn't been visited yet, create a new node for it
+                    Node* cloneNeighbor = new Node(neighbor->val);
+                    visited[neighbor] = cloneNeighbor;
+                    q.push(neighbor);
+                }
+                // Add the cloned neighbor to the current node's neighbors
+                visited[curr]->neighbors.push_back(visited[neighbor]);
+            }
+        }
+
+        return cloneRoot;
+    }
+};
