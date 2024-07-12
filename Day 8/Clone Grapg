@@ -1,0 +1,64 @@
+There are a total of numCourses courses you have to take, labeled from 0 to numCourses - 1. You are given an array prerequisites where prerequisites[i] = [ai, bi] indicates that you must take course bi first if you want to take course ai.
+
+For example, the pair [0, 1], indicates that to take course 0 you have to first take course 1.
+Return true if you can finish all courses. Otherwise, return false.
+
+ 
+
+Example 1:
+
+Input: numCourses = 2, prerequisites = [[1,0]]
+Output: true
+Explanation: There are a total of 2 courses to take. 
+To take course 1 you should have finished course 0. So it is possible.
+
+
+
+
+
+// Source Code
+
+
+class Solution {
+public:
+    bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
+        // Create an adjacency list and in-degree array
+        vector<vector<int>> adjList(numCourses);
+        vector<int> inDegree(numCourses, 0);
+
+        // Fill the adjacency list and in-degree array
+        for (const auto& prereq : prerequisites) {
+            int course = prereq[0];
+            int prereqCourse = prereq[1];
+            adjList[prereqCourse].push_back(course);
+            inDegree[course]++;
+        }
+
+        // Initialize the queue with all courses having in-degree 0
+        queue<int> q;
+        for (int i = 0; i < numCourses; ++i) {
+            if (inDegree[i] == 0) {
+                q.push(i);
+            }
+        }
+
+        int count = 0; // To count the number of courses that have been processed
+
+        // Process the courses in topological order
+        while (!q.empty()) {
+            int curr = q.front();
+            q.pop();
+            count++;
+
+            for (int neighbor : adjList[curr]) {
+                inDegree[neighbor]--;
+                if (inDegree[neighbor] == 0) {
+                    q.push(neighbor);
+                }
+            }
+        }
+
+        // If count is equal to numCourses, it means we can finish all courses
+        return count == numCourses;
+    }
+};
