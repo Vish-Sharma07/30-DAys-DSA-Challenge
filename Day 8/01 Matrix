@@ -1,0 +1,47 @@
+Given an m x n binary matrix mat, return the distance of the nearest 0 for each cell.
+
+The distance between two adjacent cells is 1.
+
+// Source Code
+
+class Solution {
+public:
+    vector<vector<int>> updateMatrix(vector<vector<int>>& mat) {
+        int rows = mat.size();
+        int cols = mat[0].size();
+        vector<vector<int>> dist(rows, vector<int>(cols, INT_MAX));
+        queue<pair<int, int>> q;
+
+        // Initialize the queue with all the 0s in the matrix
+        for (int i = 0; i < rows; ++i) {
+            for (int j = 0; j < cols; ++j) {
+                if (mat[i][j] == 0) {
+                    dist[i][j] = 0;
+                    q.push({i, j});
+                }
+            }
+        }
+
+        // Directions array for moving in four directions (up, down, left, right)
+        vector<pair<int, int>> directions = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+
+        // BFS to update distances
+        while (!q.empty()) {
+            auto [r, c] = q.front();
+            q.pop();
+
+            for (auto [dr, dc] : directions) {
+                int newRow = r + dr;
+                int newCol = c + dc;
+
+                // Check if the new position is within bounds and if we found a shorter distance
+                if (newRow >= 0 && newRow < rows && newCol >= 0 && newCol < cols && dist[newRow][newCol] > dist[r][c] + 1) {
+                    dist[newRow][newCol] = dist[r][c] + 1;
+                    q.push({newRow, newCol});
+                }
+            }
+        }
+
+        return dist;
+    }
+};
