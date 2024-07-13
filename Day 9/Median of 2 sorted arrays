@@ -14,30 +14,38 @@ Explanation: merged array = [1,2,3] and median is 2.
 
 class Solution {
 public:
-    vector<int> topKFrequent(vector<int>& nums, int k) {
-        // Step 1: Count the frequency of each element
-        unordered_map<int, int> frequencyMap;
-        for (int num : nums) {
-            frequencyMap[num]++;
+    double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {
+        if (nums1.size() > nums2.size()) {
+            return findMedianSortedArrays(nums2, nums1);
         }
-
-        // Step 2: Use a min-heap to keep track of the top k elements
-        priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> minHeap;
         
-        for (auto& entry : frequencyMap) {
-            minHeap.push({entry.second, entry.first});
-            if (minHeap.size() > k) {
-                minHeap.pop();
+        int x = nums1.size();
+        int y = nums2.size();
+        
+        int low = 0, high = x;
+        while (low <= high) {
+            int partitionX = (low + high) / 2;
+            int partitionY = (x + y + 1) / 2 - partitionX;
+            
+            int maxX = (partitionX == 0) ? INT_MIN : nums1[partitionX - 1];
+            int maxY = (partitionY == 0) ? INT_MIN : nums2[partitionY - 1];
+            
+            int minX = (partitionX == x) ? INT_MAX : nums1[partitionX];
+            int minY = (partitionY == y) ? INT_MAX : nums2[partitionY];
+            
+            if (maxX <= minY && maxY <= minX) {
+                if ((x + y) % 2 == 0) {
+                    return (double)(max(maxX, maxY) + min(minX, minY)) / 2;
+                } else {
+                    return (double)max(maxX, maxY);
+                }
+            } else if (maxX > minY) {
+                high = partitionX - 1;
+            } else {
+                low = partitionX + 1;
             }
         }
-
-        // Step 3: Extract the elements from the min-heap
-        vector<int> topKElements;
-        while (!minHeap.empty()) {
-            topKElements.push_back(minHeap.top().second);
-            minHeap.pop();
-        }
         
-        return topKElements;
+        throw invalid_argument("Input arrays are not sorted");
     }
 };
