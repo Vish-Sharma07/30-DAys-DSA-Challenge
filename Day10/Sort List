@@ -1,0 +1,77 @@
+Given the Head of the Linked List, return the list after sorting it in the ascending order.
+
+// Source Code
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+
+class Solution {
+public:
+    ListNode* sortList(ListNode* head) {
+        // Base case: if the list is empty or has only one element
+        if (!head || !head->next) {
+            return head;
+        }
+
+        // Step 1: Split the list into two halves
+        ListNode* mid = getMiddle(head);
+        ListNode* left = head;
+        ListNode* right = mid->next;
+        mid->next = nullptr;  // Split the list into two parts
+
+        // Step 2: Recursively sort each half
+        left = sortList(left);
+        right = sortList(right);
+
+        // Step 3: Merge the sorted halves
+        return merge(left, right);
+    }
+
+private:
+    ListNode* getMiddle(ListNode* head) {
+        // This function finds the middle of the list using the fast and slow pointer technique
+        ListNode* slow = head;
+        ListNode* fast = head->next;
+
+        while (fast && fast->next) {
+            slow = slow->next;
+            fast = fast->next->next;
+        }
+
+        return slow;
+    }
+
+    ListNode* merge(ListNode* left, ListNode* right) {
+        // This function merges two sorted lists into one sorted list
+        ListNode dummy;
+        ListNode* current = &dummy;
+
+        while (left && right) {
+            if (left->val < right->val) {
+                current->next = left;
+                left = left->next;
+            } else {
+                current->next = right;
+                right = right->next;
+            }
+            current = current->next;
+        }
+
+        // Append the remaining elements of left or right list
+        if (left) {
+            current->next = left;
+        } else {
+            current->next = right;
+        }
+
+        return dummy.next;
+    }
+};
